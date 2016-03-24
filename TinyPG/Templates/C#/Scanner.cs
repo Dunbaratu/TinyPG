@@ -94,6 +94,8 @@ namespace <%Namespace%>
             Token tok = null;
             List<TokenType> scantokens;
 
+            string lowerInput = Input.ToLower();
+
 
             // this prevents double scanning and matching
             // increased performance
@@ -115,7 +117,7 @@ namespace <%Namespace%>
 
                 int len = -1;
                 TokenType index = (TokenType)int.MaxValue;
-                string input = Input.Substring(startpos);
+                string input = lowerInput.Substring(startpos);
 
                 tok = new Token(startpos, endpos);
 
