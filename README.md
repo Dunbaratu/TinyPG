@@ -1,7 +1,23 @@
-TinyPG
-======
+TinyPG Changes for kOS
+======================
 
-The unofficial fork of the Tiny Parser Generator by Herre Kuijpers.
+TinyPG is a tool kOS makes use of to help built its kerboscript compiler.
+It had to be slightly modified for use with kOS, and this fork of it on
+GitHub exists to hold those slight modifications.
+
+The modifications that have been added for kOS purposes are:
+
+1.  Changed compiled regular expressions to uncompiled ones instead.
+    (Sadly, the "*Any*" platform bans their use, so we have to take
+    the performance hit of doing so.)
+2.  Changed the technique used to read case-insensitive keywords so it
+    doesn't depend on regular expressions to do it, which are pretty
+    slow at doing it when uncompiled.
+
+About TinyPG Itself
+===================
+
+Originally written by Herre Kuijpers.
 
 It is an LL(1) recursive descent parser generator written in C# which can generate a scanner, parser, and parsetree file in either C# or VB code.
 

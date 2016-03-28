@@ -13,6 +13,7 @@ namespace <%Namespace%>
     public partial class Scanner
     {
         public string Input;
+        public string LowerInput;
         public int StartPos = 0;
         public int EndPos = 0;
         public string CurrentFile;
@@ -48,6 +49,7 @@ namespace <%Namespace%>
         public void Init(string input, string fileName)
         {
             this.Input = input;
+            LowerInput = Input.ToLower();
             StartPos = 0;
             EndPos = 0;
             CurrentFile = fileName;
@@ -94,8 +96,6 @@ namespace <%Namespace%>
             Token tok = null;
             List<TokenType> scantokens;
 
-            string lowerInput = Input.ToLower();
-
 
             // this prevents double scanning and matching
             // increased performance
@@ -117,7 +117,7 @@ namespace <%Namespace%>
 
                 int len = -1;
                 TokenType index = (TokenType)int.MaxValue;
-                string input = lowerInput.Substring(startpos);
+                string input = LowerInput.Substring(startpos);
 
                 tok = new Token(startpos, endpos);
 
