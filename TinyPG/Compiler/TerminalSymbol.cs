@@ -36,15 +36,19 @@ namespace TinyPG.Compiler
             // caret if the value in the grammar file was actually a string
             // literal rather than a bit of code or a variable identifier
             // containing the pattern:
-            int insertIndex = 0;
+            int insertIndex = -1; // negative value is a flag indicating don't insert anything.
             string patternWithCaret = pattern;
-            if (pattern.StartsWith("@\"")) // string literal starting with @"
+            if (pattern.StartsWith("@\"") && pattern.EndsWith("\"")) // string literal starting with @"
                 insertIndex = 2;
-            else if (pattern.StartsWith("\"")) // string literal starting with "
+            else if (pattern.StartsWith("\"") && pattern.EndsWith("\"")) // string literal starting with "
                 insertIndex = 1;
-            if (pattern[insertIndex] != '^')
-                patternWithCaret = pattern.Insert(insertIndex, "^");
-
+            // If we are in a quote string of some sort, and it doesn't already start with an opening
+            // caret, add one and protect it with non-capturing grouping parentheses:
+            if (insertIndex >= 0 && pattern[insertIndex] != '^')
+            {
+                patternWithCaret = pattern.Insert(insertIndex, "^(?:");
+                patternWithCaret = patternWithCaret.Insert(patternWithCaret.Length - 1, ")");
+            }
             Expression = new Regex(patternWithCaret, RegexOptions.Compiled);
         }
 
