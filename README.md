@@ -13,6 +13,10 @@ The modifications that have been added for kOS purposes are:
 2.  Changed the technique used to read case-insensitive keywords so it
     doesn't depend on regular expressions to do it, which are pretty
     slow at doing it when uncompiled.
+3.  We noticed that TinyPG uses your terminal token regular expressions
+    in such a way that adding a regex caret '^' to the start of them
+    will make the same exact logical rule, but execute it much faster.
+    So we insert that caret into all TerminalSymbol regex patterns.
 
 About TinyPG Itself
 ===================
