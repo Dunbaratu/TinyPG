@@ -117,15 +117,15 @@ namespace <%Namespace%>
 
                 int len = -1;
                 TokenType index = (TokenType)int.MaxValue;
-                string input = LowerInput.Substring(startpos);
 
                 tok = new Token(startpos, endpos);
 
                 for (i = 0; i < scantokens.Count; i++)
                 {
                     Regex r = Patterns[scantokens[i]];
-                    Match m = r.Match(input);
-                    if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len )))
+                    // use startpos instead of a substring to save memory allocation, but anchors must use \G in place of ^
+                    Match m = r.Match(LowerInput, startpos);
+                    if (m.Success && m.Index == startpos && ((m.Length > len) || (scantokens[i] < index && m.Length == len )))
                     {
                         len = m.Length;
                         index = scantokens[i];  

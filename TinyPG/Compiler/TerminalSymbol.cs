@@ -28,28 +28,28 @@ namespace TinyPG.Compiler
         {
             Name = name;
 
-            // The pattern is a lot faster if the Regex starts on a caret,
-            // as per PR #4:  Since the scanner throws away any matches
-            // that don't start at index zero anyway, there is no logical
-            // difference between having the caret and not having it - just
+            // The pattern is a lot faster if the Regex starts on a \G anchor,
+            // as per PR #5:  Since the scanner throws away any matches
+            // that don't start at startpos anyway, there is no logical
+            // difference between having the anchor and not having it - just
             // a speed difference.  BUT, be careful to only insert that
-            // caret if the value in the grammar file was actually a string
+            // anchor if the value in the grammar file was actually a string
             // literal rather than a bit of code or a variable identifier
             // containing the pattern:
             int insertIndex = -1; // negative value is a flag indicating don't insert anything.
-            string patternWithCaret = pattern;
+            string patternWithAnchor = pattern;
             if (pattern.StartsWith("@\"") && pattern.EndsWith("\"")) // string literal starting with @"
                 insertIndex = 2;
             else if (pattern.StartsWith("\"") && pattern.EndsWith("\"")) // string literal starting with "
                 insertIndex = 1;
             // If we are in a quote string of some sort, and it doesn't already start with an opening
-            // caret, add one and protect it with non-capturing grouping parentheses:
-            if (insertIndex >= 0 && pattern[insertIndex] != '^')
+            // anchor, add one and protect it with non-capturing grouping parentheses:
+            if (insertIndex >= 0 && pattern.IndexOf("\\G") != insertIndex)
             {
-                patternWithCaret = pattern.Insert(insertIndex, "^(?:");
-                patternWithCaret = patternWithCaret.Insert(patternWithCaret.Length - 1, ")");
+                patternWithAnchor = pattern.Insert(insertIndex, "\\G(?:");
+                patternWithAnchor = patternWithAnchor.Insert(patternWithAnchor.Length - 1, ")");
             }
-            Expression = new Regex(patternWithCaret, RegexOptions.Compiled);
+            Expression = new Regex(patternWithAnchor, RegexOptions.Compiled);
         }
 
         public TerminalSymbol(string name, Regex expression)
